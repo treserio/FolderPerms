@@ -14,7 +14,7 @@ namespace FolderSetup
             Console.WriteLine("Press any key to exit.");
             Console.ReadKey();
         }
-        static void Main(string[] args)
+        static void Main()
         {
             // while the password is incorrect loop through request, or type exit to quit
             string pw = "";
