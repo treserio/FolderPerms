@@ -35,6 +35,7 @@ namespace FolderSetup
             if (confirm.Equals("Y", StringComparison.InvariantCultureIgnoreCase))
             {
                 // command strings for icacls ***? add one to lock down permissions on this executable ?***
+                // ***? Also create a check to make sure that it's in the admin folder before running? "Directory\ + prntFldr + \Admin" ?***
                 string icaclsModify = prntFldr + "\\* /grant:r \"HOLDENMCKENNA\\Limited Case Access\":(OI)(CI)(IO)M";
                 string icaclsWrite = prntFldr + "\\* /grant:r \"HOLDENMCKENNA\\Limited Case Access\":(NP)W";
                 // start icacls process and send parameters to run as
