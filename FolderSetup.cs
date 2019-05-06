@@ -36,15 +36,16 @@ namespace FolderSetup
             {
                 // command strings for icacls ***? add one to lock down permissions on this executable ?***
                 // ***? Also create a check to make sure that it's in the admin folder before running? "Directory\ + prntFldr + \Admin" ?***
-                string icaclsModify = prntFldr + "\\* /grant:r \"HOLDENMCKENNA\\Limited Case Access\":(OI)(CI)(IO)M";
-                string icaclsWrite = prntFldr + "\\* /grant:r \"HOLDENMCKENNA\\Limited Case Access\":(NP)W";
+                string icaclsModify = "\"" + prntFldr + "\\*\" /grant:r \"HOLDENMCKENNA\\Limited Case Access\":(OI)(CI)(IO)M";
+                string icaclsWrite = "\"" + prntFldr  + "\\*\" /grant:r \"HOLDENMCKENNA\\Limited Case Access\":(NP)W";
+                Console.WriteLine(icaclsModify);
                 // start icacls process and send parameters to run as
                 var modfy = Process.Start("icacls.exe", icaclsModify);
                     // wait for icacls to finish and confirm it ran successfully
                     modfy.WaitForExit();
                     if (modfy.ExitCode != 0)
                     {
-                        Console.WriteLine("There was an error setting modify permissions");
+                        Console.WriteLine("There was an error setting modify permissions: " + modfy.ExitCode);
                         Program.exitPrompt();
                         Environment.Exit(-1);
                     }
@@ -54,7 +55,7 @@ namespace FolderSetup
                     wrte.WaitForExit();
                     if (wrte.ExitCode != 0)
                     {
-                        Console.WriteLine("There was an error setting write permissions");
+                        Console.WriteLine("There was an error setting write permissions: " + modfy.ExitCode);
                         Program.exitPrompt();
                         Environment.Exit(-2);
                     }
