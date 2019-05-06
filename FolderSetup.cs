@@ -16,12 +16,43 @@ namespace FolderSetup
         }
         static void Main()
         {
-            // while the password is incorrect loop through request, or type exit to quit
+            // initialize password string for while loop
             string pw = "";
+            // while the password is incorrect loop through request, or type exit to quit
             while (!pw.Equals("H0Ld3nItD0wn!"))
             {
+                // reset string after iteration
+                pw = "";
                 Console.WriteLine("Enter Password or type [Exit] to exit:");
-                pw = Console.ReadLine();
+                // for reading in keystrokes
+                ConsoleKeyInfo key;
+                // obstruct and read in keystrokes
+                do
+                {
+                    key = Console.ReadKey(true);
+                    // as long as a Backspace or Enter wasn't used
+                    if (key.Key != ConsoleKey.Backspace && key.Key != ConsoleKey.Enter)
+                    {
+                        pw += key.KeyChar;
+                        Console.Write("*");
+                    }
+                    else
+                    {
+                        // If backspace is used, remove a space from the pw and correct the number of * displayed
+                        if (key.Key == ConsoleKey.Backspace && pw.Length > 0)
+                        {
+                            // reduce the characters in pw by 1
+                            pw = pw.Substring(0, (pw.Length - 1));
+                            // backspace, erase by using a space, and backspace again
+                            Console.Write("\b \b");
+                        }
+                    }
+                // exit on Enter
+                } while (key.Key != ConsoleKey.Enter);
+                Console.WriteLine("");
+                // Console.WriteLine(pw); *** Line used for debugging
+
+                // on exit sequence quit application
                 if (pw.Equals("Exit", StringComparison.InvariantCultureIgnoreCase))
                 {
                     Environment.Exit(0);
@@ -37,28 +68,28 @@ namespace FolderSetup
                 // command strings for icacls ***? add one to lock down permissions on this executable ?***
                 // ***? Also create a check to make sure that it's in the admin folder before running? "Directory\ + prntFldr + \Admin" ?***
                 string icaclsModify = "\"" + prntFldr + "\\*\" /grant:r \"HOLDENMCKENNA\\Limited Case Access\":(OI)(CI)(IO)M";
-                string icaclsWrite = "\"" + prntFldr  + "\\*\" /grant:r \"HOLDENMCKENNA\\Limited Case Access\":(NP)W";
-                Console.WriteLine(icaclsModify);
+                string icaclsWrite = "\"" + prntFldr + "\\*\" /grant:r \"HOLDENMCKENNA\\Limited Case Access\":(NP)W";
+                // Console.WriteLine(icaclsModify); *** Line used for debugging
                 // start icacls process and send parameters to run as
                 var modfy = Process.Start("icacls.exe", icaclsModify);
-                    // wait for icacls to finish and confirm it ran successfully
-                    modfy.WaitForExit();
-                    if (modfy.ExitCode != 0)
-                    {
-                        Console.WriteLine("There was an error setting modify permissions: " + modfy.ExitCode);
-                        Program.exitPrompt();
-                        Environment.Exit(-1);
-                    }
+                // wait for icacls to finish and confirm it ran successfully
+                modfy.WaitForExit();
+                if (modfy.ExitCode != 0)
+                {
+                    Console.WriteLine("There was an error setting modify permissions: " + modfy.ExitCode);
+                    Program.exitPrompt();
+                    Environment.Exit(-1);
+                }
                 // start icacls process and send parameters to run as
                 var wrte = Process.Start("icacls.exe", icaclsWrite);
-                    // wait for icacls to finish and confirm it ran successfully
-                    wrte.WaitForExit();
-                    if (wrte.ExitCode != 0)
-                    {
-                        Console.WriteLine("There was an error setting write permissions: " + modfy.ExitCode);
-                        Program.exitPrompt();
-                        Environment.Exit(-2);
-                    }
+                // wait for icacls to finish and confirm it ran successfully
+                wrte.WaitForExit();
+                if (wrte.ExitCode != 0)
+                {
+                    Console.WriteLine("There was an error setting write permissions: " + modfy.ExitCode);
+                    Program.exitPrompt();
+                    Environment.Exit(-2);
+                }
                 // display confirmation that permissions have been set correctly
                 Console.WriteLine();
                 Console.WriteLine("Permissions have been set for " + prntFldr);
