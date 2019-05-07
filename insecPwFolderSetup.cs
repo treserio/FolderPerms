@@ -33,6 +33,7 @@ namespace FolderSetup
                     // as long as a Backspace or Enter wasn't used
                     if (key.Key != ConsoleKey.Backspace && key.Key != ConsoleKey.Enter)
                     {
+                        // append keystroke to pw string
                         pw += key.KeyChar;
                         Console.Write("*");
                     }
@@ -77,7 +78,7 @@ namespace FolderSetup
                 if (modfy.ExitCode != 0)
                 {
                     Console.WriteLine("There was an error setting modify permissions: " + modfy.ExitCode);
-                    Program.exitPrompt();
+                    exitPrompt();
                     Environment.Exit(-1);
                 }
                 // start icacls process and send parameters to run as
@@ -87,7 +88,7 @@ namespace FolderSetup
                 if (wrte.ExitCode != 0)
                 {
                     Console.WriteLine("There was an error setting write permissions: " + modfy.ExitCode);
-                    Program.exitPrompt();
+                    exitPrompt();
                     Environment.Exit(-2);
                 }
                 // display confirmation that permissions have been set correctly
@@ -98,7 +99,7 @@ namespace FolderSetup
             {
                 Console.WriteLine("Permissions have not been set.");
             }
-            Program.exitPrompt();
+            exitPrompt();
         }
     }
 }
